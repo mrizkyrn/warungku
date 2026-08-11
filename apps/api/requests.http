@@ -1,0 +1,181 @@
+### ================================================
+### User Module — CRUD requests
+### Requires: REST Client (VS Code) or built-in HTTP client (JetBrains)
+### ================================================
+
+@baseUrl = http://localhost:3000/api/v1
+@contentType = application/json
+
+### ------------------------------------------------
+### Health check
+### ------------------------------------------------
+
+GET {{baseUrl}}/health
+
+
+### ------------------------------------------------
+### Create user — success
+### ------------------------------------------------
+
+# @name createUser
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "jane.doe@example.com",
+  "name": "Jane Doe"
+}
+
+### Save the created id for reuse in later requests (REST Client only)
+@userId = {{createUser.response.body.data.id}}
+
+
+### ------------------------------------------------
+### Create user — duplicate email (expect 409 Conflict)
+### ------------------------------------------------
+
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "jane.doe@example.com",
+  "name": "Jane Duplicate"
+}
+
+
+### ------------------------------------------------
+### Create user — validation error (expect 400, missing fields)
+### ------------------------------------------------
+
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{
+  "email": "not-an-email"
+}
+
+
+### ------------------------------------------------
+### Create user — malformed JSON (expect 400)
+### ------------------------------------------------
+
+POST {{baseUrl}}/users
+Content-Type: {{contentType}}
+
+{ "email": "broken@example.com", "name": }
+
+
+### ------------------------------------------------
+### List users — default pagination
+### ------------------------------------------------
+
+GET {{baseUrl}}/users
+
+
+### ------------------------------------------------
+### List users — custom pagination
+### ------------------------------------------------
+
+GET {{baseUrl}}/users?page=1&limit=5
+
+
+### ------------------------------------------------
+### List users — search
+### ------------------------------------------------
+
+GET {{baseUrl}}/users?search=jane
+
+
+### ------------------------------------------------
+### List users — invalid query (expect 400, limit out of range)
+### ------------------------------------------------
+
+GET {{baseUrl}}/users?limit=500
+
+
+### ------------------------------------------------
+### Get user by id — success
+### ------------------------------------------------
+
+GET {{baseUrl}}/users/{{userId}}
+
+
+### ------------------------------------------------
+### Get user by id — invalid id format (expect 400, not a cuid)
+### ------------------------------------------------
+
+GET {{baseUrl}}/users/not-a-valid-id
+
+
+### ------------------------------------------------
+### Get user by id — valid format but not found (expect 404)
+### ------------------------------------------------
+
+GET {{baseUrl}}/users/clxxxxxxxxxxxxxxxxxxxxxx
+
+
+### ------------------------------------------------
+### Update user — partial update, name only
+### ------------------------------------------------
+
+PATCH {{baseUrl}}/users/{{userId}}
+Content-Type: {{contentType}}
+
+{
+  "name": "Jane Updated"
+}
+
+
+### ------------------------------------------------
+### Update user — email to one already taken (expect 409)
+### ------------------------------------------------
+
+PATCH {{baseUrl}}/users/{{userId}}
+Content-Type: {{contentType}}
+
+{
+  "email": "jane.doe@example.com"
+}
+
+
+### ------------------------------------------------
+### Update user — empty body (expect 400, refine() requires ≥1 field)
+### ------------------------------------------------
+
+PATCH {{baseUrl}}/users/{{userId}}
+Content-Type: {{contentType}}
+
+{}
+
+
+### ------------------------------------------------
+### Update user — not found (expect 404)
+### ------------------------------------------------
+
+PATCH {{baseUrl}}/users/clxxxxxxxxxxxxxxxxxxxxxx
+Content-Type: {{contentType}}
+
+{
+  "name": "Ghost"
+}
+
+
+### ------------------------------------------------
+### Delete user — success (expect 204, no body)
+### ------------------------------------------------
+
+DELETE {{baseUrl}}/users/{{userId}}
+
+
+### ------------------------------------------------
+### Delete user — already deleted / not found (expect 404)
+### ------------------------------------------------
+
+DELETE {{baseUrl}}/users/{{userId}}
+
+
+### ------------------------------------------------
+### 404 — unmatched route (expect notFoundHandler → 404)
+### ------------------------------------------------
+
+GET {{baseUrl}}/this-route-does-not-exist

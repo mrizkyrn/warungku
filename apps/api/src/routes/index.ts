@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { ApiResponse } from '@/lib/api-response.js';
-import { userRouter } from '@/modules/user/user.routes.js';
+import { productRouter } from '@/modules/product/product.routes.js';
 
 export const router = Router();
 
@@ -14,4 +14,4 @@ router.get('/health', (_req, res) => {
 });
 
 // Module routes
-router.use('/users', userRouter);
+router.use('/products', productRouter);

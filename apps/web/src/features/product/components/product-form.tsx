@@ -101,33 +101,58 @@ export function ProductForm({ product }: ProductFormProps) {
 
         {isDefaultPriceMode && fields[0] ? (
           <div className="border-border flex flex-col gap-2 rounded-lg border p-3">
-            <div className="flex flex-col gap-1">
-              <Label>Harga (Rp)</Label>
-              <Controller
-                control={form.control}
-                name="options.0.price"
-                render={({ field }) => (
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min={1}
-                    placeholder="15000"
-                    value={Number.isFinite(field.value) ? field.value : ''}
-                    onChange={(event) => field.onChange(event.target.valueAsNumber)}
-                    onBlur={field.onBlur}
-                    aria-invalid={Boolean(form.formState.errors.options?.[0]?.price)}
-                  />
+            <div className="flex flex-row gap-2">
+              <div className="flex min-w-0 flex-3 flex-col gap-1">
+                <Label>Harga (Rp)</Label>
+                <Controller
+                  control={form.control}
+                  name="options.0.price"
+                  render={({ field }) => (
+                    <Input
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      placeholder="15000"
+                      value={Number.isFinite(field.value) ? field.value : ''}
+                      onChange={(event) => field.onChange(event.target.valueAsNumber)}
+                      onBlur={field.onBlur}
+                      aria-invalid={Boolean(form.formState.errors.options?.[0]?.price)}
+                    />
+                  )}
+                />
+                {form.formState.errors.options?.[0]?.price && (
+                  <span className="text-destructive text-sm">
+                    {form.formState.errors.options[0]?.price?.message}
+                  </span>
                 )}
-              />
-              {form.formState.errors.options?.[0]?.price && (
-                <span className="text-destructive text-sm">
-                  {form.formState.errors.options[0]?.price?.message}
-                </span>
-              )}
+              </div>
+
+              <div className="flex min-w-0 flex-2 flex-col gap-1">
+                <Label>Satuan</Label>
+                <Controller
+                  control={form.control}
+                  name="options.0.unit"
+                  render={({ field }) => (
+                    <Select
+                      value={field.value ?? ''}
+                      onChange={(event) =>
+                        field.onChange(
+                          event.target.value === '' ? undefined : (event.target.value as Unit),
+                        )
+                      }
+                      onBlur={field.onBlur}
+                    >
+                      <option value="">Tidak ada</option>
+                      {Object.entries(unitLabels).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </div>
             </div>
-            <p className="text-muted-foreground text-sm">
-              Pilih “Tambah Pilihan” untuk membuat varian dengan harga berbeda.
-            </p>
           </div>
         ) : (
           fields.map((field, index) => (
@@ -158,8 +183,8 @@ export function ProductForm({ product }: ProductFormProps) {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex flex-col gap-1">
+              <div className="flex flex-row gap-2">
+                <div className="flex min-w-0 flex-3 flex-col gap-1">
                   <Label>Harga (Rp)</Label>
                   <Controller
                     control={form.control}
@@ -184,7 +209,7 @@ export function ProductForm({ product }: ProductFormProps) {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-1">
+                <div className="flex min-w-0 flex-2 flex-col gap-1">
                   <Label>Satuan</Label>
                   <Controller
                     control={form.control}

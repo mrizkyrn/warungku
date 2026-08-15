@@ -1,0 +1,25 @@
+# Dependencies
+**/node_modules
+
+# Build output
+**/dist
+**/generated
+**/coverage
+**/.turbo
+
+# VCS / hooks
+.git
+.gitignore
+.husky
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+**/*.log
+
+# OS
+.DS_Store
+Thumbs.db

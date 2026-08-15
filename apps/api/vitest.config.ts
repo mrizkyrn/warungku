@@ -12,6 +12,9 @@ export default defineConfig({
       reporter: ['text', 'html'],
       exclude: ['src/**/*.test.ts', 'src/**/*.d.ts', 'src/server.ts', 'generated/**'],
     },
+    env: {
+      DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/warungku?schema=public',
+    },
   },
   resolve: {
     alias: {

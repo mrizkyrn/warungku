@@ -115,21 +115,21 @@ jobs:
           DEPLOY_USER: ${{ secrets.VPS_USER }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GHCR_ACTOR: ${{ github.actor }}
-          GHCR_OWNER: ${{ github.repository_owner }}
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           TAG: ${{ needs.build-and-push.outputs.tag }}
           DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}
         run: |
           ssh "$DEPLOY_USER@$DEPLOY_HOST" \
-            "GHCR_TOKEN='$GHCR_TOKEN' GHCR_ACTOR='$GHCR_ACTOR' GHCR_OWNER='$GHCR_OWNER' TAG='$TAG' DEPLOY_PATH='$DEPLOY_PATH' bash -s" << 'EOF'
+            "GHCR_TOKEN='$GHCR_TOKEN' GHCR_ACTOR='$GHCR_ACTOR' IMAGE='$IMAGE' TAG='$TAG' DEPLOY_PATH='$DEPLOY_PATH' bash -s" << 'EOF'
           set -e
 
           cd "$DEPLOY_PATH"
 
-          echo "Deploying image tag: $TAG"
+          echo "Deploying image: $IMAGE:$TAG"
 
           echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_ACTOR" --password-stdin
 
-          export GHCR_OWNER
+          export IMAGE
           export TAG
 
           docker compose --profile migrate pull

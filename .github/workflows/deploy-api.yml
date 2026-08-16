@@ -20,7 +20,7 @@ concurrency:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/warungku/api
+  IMAGE_NAME: ${{ github.repository }}/api
 
 jobs:
   test:

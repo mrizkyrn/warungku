@@ -15,6 +15,7 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.js';
 import { PageHeader } from '@/components/ui/page-header.js';
+import { Skeleton } from '@/components/ui/skeleton.js';
 import { formatPrice, formatUnit } from '@/lib/format.js';
 
 import { useDeleteProductMutation, useProductQuery } from '../queries.js';
@@ -31,7 +32,27 @@ export function ProductDetail({ productId }: ProductDetailProps) {
   const deleteMutation = useDeleteProductMutation();
 
   if (isLoading) {
-    return <p className="text-muted-foreground text-sm">Memuat produk…</p>;
+    return (
+      <div className="flex flex-col gap-4" aria-hidden="true">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <Skeleton className="h-6 w-1/3" />
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-16 rounded-lg" />
+            <Skeleton className="h-8 w-20 rounded-lg" />
+          </div>
+        </div>
+        <Card>
+          <CardHeader>
+            <Skeleton className="h-4 w-32" />
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <Skeleton key={index} className="h-10 w-full rounded-lg" />
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   if (isError || !product) {

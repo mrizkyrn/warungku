@@ -8,121 +8,130 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as IndexRouteImport } from './routes/index';
-import { Route as ProductsIndexRouteImport } from './routes/products/index';
-import { Route as ProductsNewRouteImport } from './routes/products/new';
-import { Route as ProductsProductIdIndexRouteImport } from './routes/products/$productId/index';
-import { Route as ProductsProductIdEditRouteImport } from './routes/products/$productId/edit';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductsIndexRouteImport } from './routes/products/index'
+import { Route as ProductsNewRouteImport } from './routes/products/new'
+import { Route as ProductsProductIdIndexRouteImport } from './routes/products/$productId/index'
+import { Route as ProductsProductIdEditRouteImport } from './routes/products/$productId/edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProductsIndexRoute = ProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProductsNewRoute = ProductsNewRouteImport.update({
   id: '/products/new',
   path: '/products/new',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProductsProductIdIndexRoute = ProductsProductIdIndexRouteImport.update({
   id: '/products/$productId/',
   path: '/products/$productId/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ProductsProductIdEditRoute = ProductsProductIdEditRouteImport.update({
   id: '/products/$productId/edit',
   path: '/products/$productId/edit',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/products/new': typeof ProductsNewRoute;
-  '/products/': typeof ProductsIndexRoute;
-  '/products/$productId/edit': typeof ProductsProductIdEditRoute;
-  '/products/$productId/': typeof ProductsProductIdIndexRoute;
+  '/': typeof IndexRoute
+  '/products/new': typeof ProductsNewRoute
+  '/products/': typeof ProductsIndexRoute
+  '/products/$productId/edit': typeof ProductsProductIdEditRoute
+  '/products/$productId/': typeof ProductsProductIdIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/products/new': typeof ProductsNewRoute;
-  '/products': typeof ProductsIndexRoute;
-  '/products/$productId/edit': typeof ProductsProductIdEditRoute;
-  '/products/$productId': typeof ProductsProductIdIndexRoute;
+  '/': typeof IndexRoute
+  '/products/new': typeof ProductsNewRoute
+  '/products': typeof ProductsIndexRoute
+  '/products/$productId/edit': typeof ProductsProductIdEditRoute
+  '/products/$productId': typeof ProductsProductIdIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
-  '/products/new': typeof ProductsNewRoute;
-  '/products/': typeof ProductsIndexRoute;
-  '/products/$productId/edit': typeof ProductsProductIdEditRoute;
-  '/products/$productId/': typeof ProductsProductIdIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/products/new': typeof ProductsNewRoute
+  '/products/': typeof ProductsIndexRoute
+  '/products/$productId/edit': typeof ProductsProductIdEditRoute
+  '/products/$productId/': typeof ProductsProductIdIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/products/new' | '/products/' | '/products/$productId/edit' | '/products/$productId/';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/products/new' | '/products' | '/products/$productId/edit' | '/products/$productId';
+    | '/'
+    | '/products/new'
+    | '/products/'
+    | '/products/$productId/edit'
+    | '/products/$productId/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/products/new'
+    | '/products'
+    | '/products/$productId/edit'
+    | '/products/$productId'
   id:
     | '__root__'
     | '/'
     | '/products/new'
     | '/products/'
     | '/products/$productId/edit'
-    | '/products/$productId/';
-  fileRoutesById: FileRoutesById;
+    | '/products/$productId/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  ProductsNewRoute: typeof ProductsNewRoute;
-  ProductsIndexRoute: typeof ProductsIndexRoute;
-  ProductsProductIdEditRoute: typeof ProductsProductIdEditRoute;
-  ProductsProductIdIndexRoute: typeof ProductsProductIdIndexRoute;
+  IndexRoute: typeof IndexRoute
+  ProductsNewRoute: typeof ProductsNewRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
+  ProductsProductIdEditRoute: typeof ProductsProductIdEditRoute
+  ProductsProductIdIndexRoute: typeof ProductsProductIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/': {
-      id: '/products/';
-      path: '/products';
-      fullPath: '/products/';
-      preLoaderRoute: typeof ProductsIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/products/'
+      path: '/products'
+      fullPath: '/products/'
+      preLoaderRoute: typeof ProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/new': {
-      id: '/products/new';
-      path: '/products/new';
-      fullPath: '/products/new';
-      preLoaderRoute: typeof ProductsNewRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/products/new'
+      path: '/products/new'
+      fullPath: '/products/new'
+      preLoaderRoute: typeof ProductsNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/$productId/': {
-      id: '/products/$productId/';
-      path: '/products/$productId';
-      fullPath: '/products/$productId/';
-      preLoaderRoute: typeof ProductsProductIdIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/products/$productId/'
+      path: '/products/$productId'
+      fullPath: '/products/$productId/'
+      preLoaderRoute: typeof ProductsProductIdIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/products/$productId/edit': {
-      id: '/products/$productId/edit';
-      path: '/products/$productId/edit';
-      fullPath: '/products/$productId/edit';
-      preLoaderRoute: typeof ProductsProductIdEditRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/products/$productId/edit'
+      path: '/products/$productId/edit'
+      fullPath: '/products/$productId/edit'
+      preLoaderRoute: typeof ProductsProductIdEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -132,7 +141,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsIndexRoute: ProductsIndexRoute,
   ProductsProductIdEditRoute: ProductsProductIdEditRoute,
   ProductsProductIdIndexRoute: ProductsProductIdIndexRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

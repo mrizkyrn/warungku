@@ -1,9 +1,11 @@
 import { Link } from '@tanstack/react-router';
+import { PackagePlus, SearchX } from 'lucide-react';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.js';
 import { Button, buttonVariants } from '@/components/ui/button.js';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card.js';
 import { Input } from '@/components/ui/input.js';
+import { Skeleton } from '@/components/ui/skeleton.js';
 import { formatPrice, formatUnit } from '@/lib/format.js';
 
 import { useProductList } from '../hooks';
@@ -12,6 +14,8 @@ import { getOptionLabel } from '../utils.js';
 export function ProductList() {
   const { search, handleSearchChange, page, setPage, totalPages, data, isLoading, isError, error } =
     useProductList();
+
+  const isEmpty = !isLoading && !isError && (data?.data?.length ?? 0) === 0;
 
   return (
     <div className="flex flex-col gap-4">
@@ -35,7 +39,21 @@ export function ProductList() {
         aria-label="Cari produk"
       />
 
-      {isLoading && <p className="text-muted-foreground text-sm">Memuat produk…</p>}
+      {isLoading && (
+        <div className="flex flex-col gap-2" aria-hidden="true">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index} size="sm">
+              <CardHeader>
+                <Skeleton className="h-4 w-2/3" />
+              </CardHeader>
+              <CardContent className="flex flex-row items-center justify-between gap-2">
+                <Skeleton className="h-4 w-1/3" />
+                <Skeleton className="h-4 w-1/6" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {isError && (
         <Alert variant="destructive">
@@ -44,9 +62,32 @@ export function ProductList() {
         </Alert>
       )}
 
-      {!isLoading && !isError && (data?.data?.length ?? 0) === 0 && (
-        <p className="text-muted-foreground text-sm">Tidak ada produk yang ditemukan.</p>
-      )}
+      {isEmpty && search ? (
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed px-2 py-12 text-center">
+          <SearchX className="text-muted-foreground size-8" strokeWidth={1.5} />
+          <div className="flex flex-col gap-1">
+            <p className="text-foreground text-sm font-medium">Produk tidak ditemukan</p>
+            <p className="text-muted-foreground text-sm">
+              Coba kata kunci lain, atau hapus pencarian untuk melihat semua produk.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => handleSearchChange('')}>
+            Hapus pencarian
+          </Button>
+        </div>
+      ) : null}
+
+      {isEmpty && !search ? (
+        <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed px-2 py-12 text-center">
+          <PackagePlus className="text-muted-foreground size-8" strokeWidth={1.5} />
+          <div className="flex flex-col gap-1">
+            <p className="text-foreground text-sm font-medium">Belum ada produk</p>
+            <p className="text-muted-foreground text-sm">
+              Tambahkan produk pertama untuk mulai berjualan.
+            </p>
+          </div>
+        </div>
+      ) : null}
 
       {!isLoading && !isError && (data?.data?.length ?? 0) > 0 && (
         <div className="flex flex-col gap-2">

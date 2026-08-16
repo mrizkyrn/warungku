@@ -7,9 +7,16 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.js';
 import { Button, buttonVariants } from '@/components/ui/button.js';
+import { CurrencyInput } from '@/components/ui/currency-input.js';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field.js';
 import { Input } from '@/components/ui/input.js';
-import { Label } from '@/components/ui/label.js';
-import { Select } from '@/components/ui/select.js';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select.js';
 import { unitLabels } from '@/lib/format.js';
 
 import { useProductOptions } from '../hooks';
@@ -69,176 +76,175 @@ export function ProductForm({ product }: ProductFormProps) {
         </Alert>
       )}
 
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="name">Nama Produk</Label>
-        <Input
-          id="name"
-          placeholder="mis. Kopi Susu"
-          aria-invalid={Boolean(form.formState.errors.name)}
-          {...form.register('name')}
-        />
-        {form.formState.errors.name && (
-          <span className="text-destructive text-sm">{form.formState.errors.name.message}</span>
-        )}
-      </div>
+      <FieldGroup>
+        <Field data-invalid={Boolean(form.formState.errors.name)}>
+          <FieldLabel htmlFor="name">Nama Produk</FieldLabel>
+          <Input
+            id="name"
+            placeholder="mis. Kopi Susu"
+            aria-invalid={Boolean(form.formState.errors.name)}
+            {...form.register('name')}
+          />
+          <FieldError errors={[form.formState.errors.name]} />
+        </Field>
 
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            <h2 className="text-foreground text-lg font-medium">
-              {isDefaultPriceMode ? 'Harga' : 'Pilihan Produk'}
-            </h2>
-            <p className="text-muted-foreground text-sm">
-              {isDefaultPriceMode
-                ? 'Satu harga untuk produk ini.'
-                : 'Tambahkan varian beserta harganya.'}
-            </p>
-          </div>
-          <Button type="button" variant="outline" size="sm" onClick={handleAddOption}>
-            Tambah Pilihan
-          </Button>
-        </div>
-
-        {isDefaultPriceMode && fields[0] ? (
-          <div className="border-border flex flex-col gap-2 rounded-lg border p-3">
-            <div className="flex flex-row gap-2">
-              <div className="flex min-w-0 flex-3 flex-col gap-1">
-                <Label>Harga (Rp)</Label>
-                <Controller
-                  control={form.control}
-                  name="options.0.price"
-                  render={({ field }) => (
-                    <Input
-                      type="number"
-                      inputMode="numeric"
-                      min={1}
-                      placeholder="15000"
-                      value={Number.isFinite(field.value) ? field.value : ''}
-                      onChange={(event) => field.onChange(event.target.valueAsNumber)}
-                      onBlur={field.onBlur}
-                      aria-invalid={Boolean(form.formState.errors.options?.[0]?.price)}
-                    />
-                  )}
-                />
-                {form.formState.errors.options?.[0]?.price && (
-                  <span className="text-destructive text-sm">
-                    {form.formState.errors.options[0]?.price?.message}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex min-w-0 flex-2 flex-col gap-1">
-                <Label>Satuan</Label>
-                <Controller
-                  control={form.control}
-                  name="options.0.unit"
-                  render={({ field }) => (
-                    <Select
-                      value={field.value ?? ''}
-                      onChange={(event) =>
-                        field.onChange(
-                          event.target.value === '' ? undefined : (event.target.value as Unit),
-                        )
-                      }
-                      onBlur={field.onBlur}
-                    >
-                      <option value="">Tidak ada</option>
-                      {Object.entries(unitLabels).map(([value, label]) => (
-                        <option key={value} value={value}>
-                          {label}
-                        </option>
-                      ))}
-                    </Select>
-                  )}
-                />
-              </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <h2 className="text-foreground text-lg font-medium">
+                {isDefaultPriceMode ? 'Harga' : 'Pilihan Produk'}
+              </h2>
+              <p className="text-muted-foreground text-sm">
+                {isDefaultPriceMode
+                  ? 'Satu harga untuk produk ini.'
+                  : 'Tambahkan varian beserta harganya.'}
+              </p>
             </div>
+            <Button type="button" variant="outline" size="sm" onClick={handleAddOption}>
+              Tambah Pilihan
+            </Button>
           </div>
-        ) : (
-          fields.map((field, index) => (
-            <div key={field.id} className="border-border flex flex-col gap-2 rounded-lg border p-3">
-              <div className="flex items-end gap-2">
-                <div className="flex flex-1 flex-col gap-1">
-                  <Label htmlFor={`options.${index}.name`}>Nama Pilihan</Label>
-                  <Input
-                    id={`options.${index}.name`}
-                    placeholder="mis. Reguler"
-                    {...form.register(`options.${index}.name`)}
-                  />
-                  {form.formState.errors.options?.[index]?.name && (
-                    <span className="text-destructive text-sm">
-                      {form.formState.errors.options[index]?.name?.message}
-                    </span>
-                  )}
-                </div>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  aria-label="Hapus pilihan"
-                  disabled={fields.length <= 1}
-                  onClick={() => remove(index)}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
-              </div>
 
+          {isDefaultPriceMode && fields[0] ? (
+            <div className="border-border flex flex-col gap-2 rounded-lg border p-3">
               <div className="flex flex-row gap-2">
-                <div className="flex min-w-0 flex-3 flex-col gap-1">
-                  <Label>Harga (Rp)</Label>
+                <Field
+                  className="min-w-0 flex-3"
+                  data-invalid={Boolean(form.formState.errors.options?.[0]?.price)}
+                >
+                  <FieldLabel>Harga (Rp)</FieldLabel>
                   <Controller
                     control={form.control}
-                    name={`options.${index}.price`}
+                    name="options.0.price"
                     render={({ field }) => (
-                      <Input
-                        type="number"
-                        inputMode="numeric"
-                        min={1}
-                        placeholder="15000"
-                        value={Number.isFinite(field.value) ? field.value : ''}
-                        onChange={(event) => field.onChange(event.target.valueAsNumber)}
+                      <CurrencyInput
+                        placeholder="5.000"
+                        value={field.value}
+                        onValueChange={(value) => field.onChange(value ?? NaN)}
                         onBlur={field.onBlur}
-                        aria-invalid={Boolean(form.formState.errors.options?.[index]?.price)}
+                        aria-invalid={Boolean(form.formState.errors.options?.[0]?.price)}
                       />
                     )}
                   />
-                  {form.formState.errors.options?.[index]?.price && (
-                    <span className="text-destructive text-sm">
-                      {form.formState.errors.options[index]?.price?.message}
-                    </span>
-                  )}
-                </div>
+                  <FieldError errors={[form.formState.errors.options?.[0]?.price]} />
+                </Field>
 
-                <div className="flex min-w-0 flex-2 flex-col gap-1">
-                  <Label>Satuan</Label>
+                <Field className="min-w-0 flex-2">
+                  <FieldLabel>Satuan</FieldLabel>
                   <Controller
                     control={form.control}
-                    name={`options.${index}.unit`}
+                    name="options.0.unit"
                     render={({ field }) => (
                       <Select
-                        value={field.value ?? ''}
-                        onChange={(event) =>
-                          field.onChange(
-                            event.target.value === '' ? undefined : (event.target.value as Unit),
-                          )
+                        value={field.value ?? null}
+                        onValueChange={(value) =>
+                          field.onChange(value === null ? undefined : (value as Unit))
                         }
-                        onBlur={field.onBlur}
                       >
-                        <option value="">Tidak ada</option>
-                        {Object.entries(unitLabels).map(([value, label]) => (
-                          <option key={value} value={value}>
-                            {label}
-                          </option>
-                        ))}
+                        <SelectTrigger className="w-full" onBlur={field.onBlur}>
+                          <SelectValue placeholder="Tidak ada" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={null}>Tidak ada</SelectItem>
+                          {Object.entries(unitLabels).map(([value, label]) => (
+                            <SelectItem key={value} value={value}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
                       </Select>
                     )}
                   />
-                </div>
+                </Field>
               </div>
             </div>
-          ))
-        )}
-      </div>
+          ) : (
+            fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="border-border flex flex-col gap-2 rounded-lg border p-3"
+              >
+                <div className="flex items-end gap-2">
+                  <Field
+                    className="flex-1"
+                    data-invalid={Boolean(form.formState.errors.options?.[index]?.name)}
+                  >
+                    <FieldLabel htmlFor={`options.${index}.name`}>Nama Pilihan</FieldLabel>
+                    <Input
+                      id={`options.${index}.name`}
+                      placeholder="mis. Reguler"
+                      aria-invalid={Boolean(form.formState.errors.options?.[index]?.name)}
+                      {...form.register(`options.${index}.name`)}
+                    />
+                    <FieldError errors={[form.formState.errors.options?.[index]?.name]} />
+                  </Field>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    aria-label="Hapus pilihan"
+                    disabled={fields.length <= 1}
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
+
+                <div className="flex flex-row gap-2">
+                  <Field
+                    className="min-w-0 flex-3"
+                    data-invalid={Boolean(form.formState.errors.options?.[index]?.price)}
+                  >
+                    <FieldLabel>Harga (Rp)</FieldLabel>
+                    <Controller
+                      control={form.control}
+                      name={`options.${index}.price`}
+                      render={({ field }) => (
+                        <CurrencyInput
+                          placeholder="5.000"
+                          value={field.value}
+                          onValueChange={(value) => field.onChange(value ?? NaN)}
+                          onBlur={field.onBlur}
+                          aria-invalid={Boolean(form.formState.errors.options?.[index]?.price)}
+                        />
+                      )}
+                    />
+                    <FieldError errors={[form.formState.errors.options?.[index]?.price]} />
+                  </Field>
+
+                  <Field className="min-w-0 flex-2">
+                    <FieldLabel>Satuan</FieldLabel>
+                    <Controller
+                      control={form.control}
+                      name={`options.${index}.unit`}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value ?? null}
+                          onValueChange={(value) =>
+                            field.onChange(value === null ? undefined : (value as Unit))
+                          }
+                        >
+                          <SelectTrigger className="w-full" onBlur={field.onBlur}>
+                            <SelectValue placeholder="Tidak ada" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value={null}>Tidak ada</SelectItem>
+                            {Object.entries(unitLabels).map(([value, label]) => (
+                              <SelectItem key={value} value={value}>
+                                {label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                  </Field>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </FieldGroup>
 
       <div className="flex items-center gap-2">
         <Button type="submit" disabled={mutation.isPending || form.formState.isSubmitting}>

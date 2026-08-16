@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client';
 
 import { queryClient } from '@/lib/query-client';
 import { applyTheme, getTheme } from '@/lib/theme';
-import { router } from '@/router.js';
+import { router } from '@/router';
 
 applyTheme(getTheme());
 
